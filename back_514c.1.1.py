@@ -1,0 +1,242 @@
+# Captação
+from datetime import datetime, date
+from typing import Callable, Any
+
+def ler_float(msg: str) -> float:
+    """Lê um número float aceitando vírgula ou ponto."""
+    while True:
+        txt = input(msg).strip().replace(",", ".")
+        try:
+            return float(txt)
+        except ValueError:
+            print("Valor inválido. Tente novamente (use números).")
+
+def idade_em_anos(dn: datetime) -> int:
+    "Calcula idade cronológica (anos completos) a partir da data de nascimento."
+    hoje = date.today()
+    anos = hoje.year - dn.year
+    if (hoje.month, hoje.day) < (dn.month, dn.day):
+        anos -= 1
+    return anos
+
+def ler_genero() -> str:
+    g = input("Digite o gênero (masculino/feminino): ").strip().lower()
+    while g not in ("masculino", "feminino"):
+        g = input("Opção inválida. Digite 'masculino' ou 'feminino': ").strip().lower()
+    return g
+
+def entrada_usuario():
+    nome = input("Digite o nome: ").strip()
+    altura_cm = ler_float("Digite a altura (cm): ")
+    while True:
+        data_nascimento_str = input("Digite a data de nascimento (DD/MM/AAAA): ").strip()
+        try:
+            data_nascimento = datetime.strptime(data_nascimento_str, "%d/%m/%Y")
+            break
+        except ValueError:
+            print("Formato inválido! Use DD/MM/AAAA (ex: 01/01/1945).")
+    genero = ler_genero()
+
+    return {
+        "nome": nome,
+        "altura_cm": altura_cm,
+        "data_nascimento": data_nascimento,
+        "genero": genero,
+    }
+
+def call_genero(genero: str,
+                func_fem: Callable[..., Any],
+                func_masc: Callable[..., Any],
+                *args, **kwargs) -> Any:
+    g = genero.strip().lower()
+    if g == "feminino":
+        return func_fem(*args, **kwargs)
+    elif g == "masculino":
+        return func_masc(*args, **kwargs)
+    else:
+        raise ValueError("Gênero inválido. Use 'masculino' ou 'feminino'.")
+
+
+def grp_fem(idade_crono: int):
+    # BODYFAT
+    def BF1():
+        BFF1 = float(input("Digite o valor de BODY FAT: "))
+        if BFF1 <= 20.9: ff1 = "Abaixo do Recomendado"
+        elif BFF1 <= 32.9: ff1 = "Normal"
+        elif BFF1 <= 38.9: ff1 = "Acima do Recomendado"
+        else: ff1 = "Muito Acima do Recomendado"
+        return BFF1, ff1
+
+    def BF2():
+        BFF2 = float(input("Digite o valor de BODY FAT: "))
+        if BFF2 <= 22.9: ff2 = "Abaixo do Recomendado"
+        elif BFF2 <= 33.9: ff2 = "Normal"
+        elif BFF2 <= 39.9: ff2 = "Acima do Recomendado"
+        else: ff2 = "Muito Acima do Recomendado"
+        return BFF2, ff2
+
+    def BF3():
+        BFF3 = float(input("Digite o valor de BODY FAT: "))
+        if BFF3 <= 23.9: ff3 = "Abaixo do Recomendado"
+        elif BFF3 <= 35.9: ff3 = "Normal"
+        elif BFF3 <= 41.9: ff3 = "Acima do Recomendado"
+        else: ff3 = "Muito Acima do Recomendado"
+        return BFF3, ff3
+
+    # MUSCLE
+    def MF1():
+        MFE1 = float(input("Digite o valor de Muscle: "))
+        if MFE1 <= 24.3: muf1 = "Abaixo do Recomendado"
+        elif MFE1 <= 30.3: muf1 = "Normal"
+        elif MFE1 <= 35.3: muf1 = "Acima do Recomendado"
+        else: muf1 = "Muito Acima do Recomendado"
+        return MFE1, muf1
+
+    def MF2():
+        MFE2 = float(input("Digite o valor de Muscle: "))
+        if MFE2 <= 24.1: muf2 = "Abaixo do Recomendado"
+        elif MFE2 <= 30.1: muf2 = "Normal"
+        elif MFE2 <= 35.1: muf2 = "Acima do Recomendado"
+        else: muf2 = "Muito Acima do Recomendado"
+        return MFE2, muf2
+
+    def MF3():
+        MFE3 = float(input("Digite o valor de Muscle: "))
+        if MFE3 <= 23.9: muf3 = "Abaixo do Recomendado"
+        elif MFE3 <= 29.9: muf3 = "Normal"
+        elif MFE3 <= 35.0: muf3 = "Acima do Recomendado"
+        else: muf3 = "Muito Acima do Recomendado"
+        return MFE3, muf3
+
+    # seletor grupo por idade
+    if 3 <= idade_crono <= 39:    return BF1(), MF1()
+    elif 40 <= idade_crono <= 59: return BF2(), MF2()
+    elif 60 <= idade_crono <= 79: return BF3(), MF3()
+    else:                         return None, None  # fora da faixa
+
+def grp_masc(idade_crono: int):
+    #bodyfat
+    def BFATM1():
+        BFM1 = float(input("Digite o valor de BODY FAT: "))
+        if BFM1 <= 8.0: fatm1 = "Abaixo do Recomendado"       
+        elif BFM1 <= 19.9: fatm1 = "Normal"                    
+        elif BFM1 <= 24.9: fatm1 = "Acima do Recomendado"
+        else: fatm1 = "Muito Acima do Recomendado"
+        return BFM1, fatm1
+
+    def BFATM2():
+        BFM2 = float(input("Digite o valor de BODY FAT: "))
+        if BFM2 <= 11.0: fatm2 = "Abaixo do Recomendado"       
+        elif BFM2 <= 21.9: fatm2 = "Normal"                    
+        elif BFM2 <= 27.9: fatm2 = "Acima do Recomendado"
+        else: fatm2 = "Muito Acima do Recomendado"
+        return BFM2, fatm2
+
+    def BFATM3():
+        BFM3 = float(input("Digite o valor de BODY FAT: "))
+        if BFM3 <= 13.0: fatm3 = "Abaixo do Recomendado"       
+        elif BFM3 <= 24.9: fatm3 = "Normal"                    
+        elif BFM3 <= 29.9: fatm3 = "Acima do Recomendado"
+        else: fatm3 = "Muito Acima do Recomendado"
+        return BFM3, fatm3
+
+    #muscle
+    def MUM1():
+        MASSM1 = float(input("Digite o valor de Muscle: "))
+        if MASSM1 <= 33.3: mus1 = "Abaixo do Recomendado"
+        elif MASSM1 <= 39.3: mus1 = "Normal"
+        elif MASSM1 <= 44.3: mus1 = "Acima do Recomendado"
+        else: mus1 = "Muito Acima do Recomendado"
+        return MASSM1, mus1
+
+    def MUM2():
+        MASSM2 = float(input("Digite o valor de Muscle: "))
+        if MASSM2 <= 33.1: mus2 = "Abaixo do Recomendado"
+        elif MASSM2 <= 39.1: mus2 = "Normal"
+        elif MASSM2 <= 43.8: mus2 = "Acima do Recomendado"
+        else: mus2 = "Muito Acima do Recomendado"
+        return MASSM2, mus2
+    
+    def MUM3():
+        MASSM3 = float(input("Digite o valor de Muscle: "))
+        if MASSM3 <= 32.9: mus3 = "Abaixo do Recomendado"
+        elif MASSM3 <= 38.9: mus3 = "Normal"
+        elif MASSM3 <= 43.6: mus3 = "Acima do Recomendado"
+        else: mus3 = "Muito Acima do Recomendado"
+        return MASSM3, mus3
+
+    # seletor grupo por idade
+    if 3 <= idade_crono <= 39:    return BFATM1(), MUM1()
+    elif 40 <= idade_crono <= 59: return BFATM2(), MUM2()
+    elif 60 <= idade_crono <= 79: return BFATM3(), MUM3()
+    else:                         return None, None  # fora da faixa
+
+# Execução
+cadastro = entrada_usuario()
+idade_crono = idade_em_anos(cadastro["data_nascimento"])
+
+# (4) peso
+peso_kg = ler_float("Digite o valor de WEIGHT: ")
+
+# (5) BMI
+BMI = ler_float("Digite o valor de BMI: ")
+if BMI <= 18.4:
+    imc = "Abaixo do peso"
+elif 18.5 <= BMI <= 24.9:
+    imc = "Peso normal"
+elif 25.0 <= BMI <= 29.9:
+    imc = "Sobrepeso"
+else:
+    imc = "Obesidade"
+
+# (6) BF e Muscle – escolhe automaticamente pelo gênero e idade
+bf_mus = call_genero(
+    cadastro["genero"],
+    lambda: grp_fem(idade_crono),
+    lambda: grp_masc(idade_crono)
+)
+if bf_mus == (None, None):
+    bf_valor = bf_classificacao = mus_valor = mus_classificacao = None
+else:
+    (bf_valor, bf_classificacao), (mus_valor, mus_classificacao) = bf_mus
+
+# (7) RM (Taxa Metabólica Basal)
+RM_Kcal = ler_float("Digite o valor de RM Kcal: ")
+
+# (8) Body Age
+body_age = ler_float("Digite o valor de Body Age: ")
+
+# (9) Visceral (apenas captação – classificação opcional)
+visceral = ler_float("Digite o valor de VISCERAL FAT: ")
+if visceral <= 9.0:
+    vis = "normal"
+elif 10.0 <= visceral <= 14.0:
+    vis = "alto"
+else:
+    vis = "muito alto"
+
+# ===== Exibição =====
+print("\n        Resultado       \n")
+print("     Dados do usuário:")
+# 1) Nome
+print(f"Nome: {cadastro['nome']}")
+# 2) Altura
+print(f"Altura: {cadastro['altura_cm']:.1f} cm")
+# 3) Idade
+print(f"Idade: {idade_crono} anos (Nascimento: {cadastro['data_nascimento'].strftime('%d/%m/%Y')})")
+# 4) Peso
+print(f"Peso: {peso_kg:.1f} kg")
+# 5) BMI
+print(f"BMI: {BMI:.1f} ({imc})")
+# 6) BF/Muscle 
+if bf_mus == (None, None):
+    print("idade fora da faixa avaliada")
+else:
+    print(f"Gordura Corporal: {bf_valor:.1f} ({bf_classificacao})")
+    print(f"Massa Muscular: {mus_valor:.1f} ({mus_classificacao})")
+# 7) RM
+print(f"RM (Taxa Metabólica Basal): {RM_Kcal:.1f} kcal")
+# 8) Body Age
+print(f"Idade Corporal: {body_age:.0f} anos")
+# 9) Visceral
+print(f"Gordura Visceral: {visceral:.1f} ({vis})")
